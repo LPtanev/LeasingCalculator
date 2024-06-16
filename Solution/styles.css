@@ -1,0 +1,91 @@
+.centered-text {
+    text-align: center;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.parent-container {
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
+    max-width: 1200px; /* Set a max width to center */
+    margin: 0 auto; /* Center the container */
+}
+
+.container, .right-container {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+#carType, #amount, #leasePeriod, #payment, #leasePeriod {
+    width: 200px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+#amount, #payment {
+    border: 2px solid black;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: black;
+    margin: 20px 0;
+}
+.vertical-line {
+    width: 2px;
+    border: none;
+    background-color: black;
+    align-content: center;
+}
+.container2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+label {
+    margin-top: 10px;
+    font-size: 16px;
+}
+input[type="number"], input[type="range"] {
+    width: 100%;
+    max-width: 200px;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.inputs label, .inputs input {
+    margin: 0 5px;
+}
+
+@media (max-width: 768px) {
+    .vertical-line {
+        display: none;
+    }
+    .container {
+        justify-content: center;
+        padding: 10px;
+    }
+
+    #carType, #amount, #payment {
+        width: 100%;
+    }
+}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Leasing Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="centered-text">
+    <h2>
+        Car Leasing Calculator
+    </h2>
+</div>
+<form>
+    <div class="parent-container">
+        <div class="container">
+            <div class="form-container">
+                <form id="calcForm">
+                    <label for="carType">Car Type:</label>
+                    <select id="carType" name="carType">
+                        <option value="empty"></option>
+                        <option value="brandNew">Brand New</option>
+                        <option value="used">Used</option>
+                    </select>
+                </form>
+                <br>
+                <div class="container2">
+                    <label for="amount">Car Value (€10,000 - €200,000):</label>
+                    <input type="number" id="amount" name="amount" min="10000" max="200000">
+                    <label for="carValue"></label><input type="range" id="carValue" name="carValue" min="10000"
+                                                         max="200000" step="1">
+                </div>
+            </div>
+        </div>
+        <div class="right-container">
+            <div class="form-container">
+                <label for="leasePeriod">Lease Period(months):</label>
+                <select id="leasePeriod" name="leasePeriod">
+                    <option value="12">12</option>
+                    <option value="24">24</option>
+                    <option value="36">36</option>
+                    <option value="48">48</option>
+                    <option value="60">60</option>
+                </select>
+                <br>
+                <div class="container2">
+                    <label for="payment">Down Payment (10% - 50%):</label>
+                    <label for="payment"></label><input type="number" id="payment" name="payment" min="10" max="50">
+                    <label for="downPayment"></label><input type="range" id="downPayment" name="downPayment" min="10"
+                                                            max="50" step="5">
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="centered-text">
+        <h2>
+            Leasing Details
+        </h2>
+    </div>
+    <div class="parent-container">
+        <div class="container">
+            <div class="form-container">
+                <p id="result"></p>
+                <p id="paymentResult"></p>
+            </div>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="right-container">
+            <div class="form-container">
+                <p id="monthlyInstallment">Monthly Installment: €</p>
+                <p id="interestRate">Interest Rate: </p>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script>
+    // JavaScript for syncing input field and slider, validation, and calculation of the final results
+
+    // Car Value section
+    const amountInput = document.getElementById('amount');
+    const amountSlider = document.getElementById('carValue');
+    const resultElement = document.getElementById('result');
+    let leasePeriod = 0;
+
+    function updateLeasePeriod() {
+        leasePeriod = parseInt(document.getElementById('leasePeriod').value);
+    }
+
+    document.getElementById('leasePeriod').addEventListener('change', updateLeasePeriod);
+
+    amountInput.addEventListener('input', function () {
+        const amount = parseInt(this.value);
+        if (amount >= 10000 && amount <= 200000) {
+            amountSlider.value = amount;
+        } else {
+            resultElement.textContent = '';
+        }
+    });
+
+    amountSlider.addEventListener('input', function () {
+        const amount = parseInt(this.value);
+        amountInput.value = amount;
+    });
+
+
+    // Down payment section
+
+    const paymentInput = document.getElementById('payment');
+    const paymentSlider = document.getElementById('downPayment');
+    const paymentResult = document.getElementById('paymentResult');
+    let price;
+
+    paymentInput.addEventListener('input', function () {
+        const payment = parseInt(this.value);
+        if (payment >= 10 && payment <= 50) {
+            paymentSlider.value = payment;
+            performDownPaymentCalculation(payment);
+        } else {
+            paymentResult.textContent = '';
+        }
+    });
+
+    paymentSlider.addEventListener('input', function () {
+        const payment = parseInt(this.value);
+        paymentInput.value = payment;
+        performDownPaymentCalculation(payment);
+        performMonthlyInstallmentCalculation()
+    });
+
+    function performDownPaymentCalculation(payment) {
+        const calculationResultDownPayment = ((payment * amountInput.value) / 100);
+        price = amountInput.value - calculationResultDownPayment;
+        paymentResult.textContent = 'Down Payment: €' + calculationResultDownPayment.toFixed(2);
+    }
+
+
+    // Car type section
+    const carTypeDropdown = document.getElementById('carType');
+    const interestRate = document.getElementById('interestRate');
+
+    carTypeDropdown.addEventListener('change', updateCarType);
+    let rate;
+
+    function updateCarType() {
+        const selectedValue = carTypeDropdown.value;
+        let newText;
+        if (selectedValue === 'brandNew') {
+            newText = 'Interest Rate: 2.99%';
+            rate = 0.00249167;
+        } else if (selectedValue === 'used') {
+            newText = 'Interest Rate: 3.7%';
+            rate = 0.003083333;
+        } else {
+            newText = 'Please choose type of car';
+        }
+
+        interestRate.textContent = newText;
+    }
+
+    const monthlyInstallment = document.getElementById('monthlyInstallment');
+
+    function performMonthlyInstallmentCalculation() {
+        const calculationResultMonthlyPayment = price * rate * Math.pow(1 + rate, leasePeriod) / (Math.pow(1 + rate, leasePeriod) - 1);
+        monthlyInstallment.textContent = 'Monthly Installment: €' + calculationResultMonthlyPayment.toFixed(2);
+        const calculationResult = amountInput.value - price + calculationResultMonthlyPayment * leasePeriod;
+        resultElement.textContent = 'Total Leasing Cost: €' + calculationResult.toFixed(2);
+    }
+
+</script>
+</body>
+</html>
